@@ -1,81 +1,108 @@
 import pandas as pd
+from pathlib import Path
 from sklearn.preprocessing import LabelEncoder
-import seaborn as sns
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
-df = pd.read_csv(r"C:\Users\ragav\Downloads\students_mental_health_survey.csv")
-
-print(df.head())
-print(df.shape)
-print(df.isnull().sum())
-
-df["CGPA"] = df["CGPA"].fillna(
-    df["CGPA"].mean()
-)
-
-df["Substance_Use"] = df["Substance_Use"].fillna(
-    "Unknown"
-)
-print(df.isnull().sum())
-print(df.dtypes)
-
-from sklearn.preprocessing import LabelEncoder
-
-le = LabelEncoder()
-
-categorical_columns = [
-    "Course",
-    "Gender",
-    "Sleep_Quality",
-    "Physical_Activity",
-    "Diet_Quality",
-    "Social_Support",
-    "Relationship_Status",
-    "Substance_Use",
-    "Counseling_Service_Use",
-    "Family_History",
-    "Chronic_Illness",
-    "Extracurricular_Involvement",
-    "Residence_Type"
-]
-
-for col in categorical_columns:
-    df[col] = le.fit_transform(df[col])
-
-print(df.head())
-
 import seaborn as sns
-import matplotlib.pyplot as plt
 
-sns.countplot(x="Sleep_Quality", hue="Stress_Level", data=df)
+BASE_DIR = Path(__file__).resolve().parent
+DATA_FILE = BASE_DIR / "students_mental_health_survey.csv"
+OUTPUT_FILE = BASE_DIR / "processed_student_stress.csv"
 
-plt.title("Sleep Quality vs Stress Level")
-plt.show()
 
-sns.boxplot(
-    x="Stress_Level",
-    y="Anxiety_Score",
-    data=df
-)
+def main():
+    # ==========================================
+    # TASK 1 - LOAD DATASET
+    # ==========================================
 
-plt.title("Anxiety Score vs Stress Level")
-plt.show()
+    if not DATA_FILE.exists():
+        raise FileNotFoundError(f"Dataset not found: {DATA_FILE}")
 
-sns.boxplot(
-    x="Stress_Level",
-    y="CGPA",
-    data=df
-)
+    df = pd.read_csv(DATA_FILE)
 
-plt.title("CGPA vs Stress Level")
-plt.show()
+    print("\n==============================")
+    print("FIRST 5 ROWS OF DATASET")
+    print("==============================")
+    print(df.head())
 
-df.to_csv(
-    "processed_student_stress.csv",
-    index=False
-)
+    print("\n==============================")
+    print("DATASET SHAPE")
+    print("==============================")
+    print(df.shape)
 
-print("Processed dataset saved successfully.")
+    print("\n==============================")
+    print("MISSING VALUES")
+    print("==============================")
+    print(df.isnull().sum())
 
-import os
-print("file saved successfully!")
+    df["CGPA"] = df["CGPA"].fillna(df["CGPA"].mean())
+    df["Substance_Use"] = df["Substance_Use"].fillna("Unknown")
+
+    print("\n==============================")
+    print("MISSING VALUES AFTER CLEANING")
+    print("==============================")
+    print(df.isnull().sum())
+
+    print("\n==============================")
+    print("DATA TYPES")
+    print("==============================")
+    print(df.dtypes)
+
+    print("\n==============================")
+    print("DATASET INFO")
+    print("==============================")
+    df.info()
+
+    # ==========================================
+    # LABEL ENCODING
+    # ==========================================
+    categorical_columns = [
+        "Course",
+        "Gender",
+        "Sleep_Quality",
+        "Physical_Activity",
+        "Diet_Quality",
+        "Social_Support",
+        "Relationship_Status",
+        "Substance_Use",
+        "Counseling_Service_Use",
+        "Family_History",
+        "Chronic_Illness",
+        "Extracurricular_Involvement",
+        "Residence_Type",
+    ]
+
+    for col in categorical_columns:
+        encoder = LabelEncoder()
+        df[col] = encoder.fit_transform(df[col].astype(str))
+
+    print("\n==============================")
+    print("ENCODED DATASET (FIRST 5 ROWS)")
+    print("==============================")
+    print(df.head())
+
+    sns.countplot(x="Sleep_Quality", hue="Stress_Level", data=df)
+    plt.title("Sleep Quality vs Stress Level")
+    plt.tight_layout()
+    plt.savefig(BASE_DIR / "sleep_quality_vs_stress.png", dpi=150)
+    plt.close()
+
+    sns.boxplot(x="Stress_Level", y="Anxiety_Score", data=df)
+    plt.title("Anxiety Score vs Stress Level")
+    plt.tight_layout()
+    plt.savefig(BASE_DIR / "anxiety_score_vs_stress.png", dpi=150)
+    plt.close()
+
+    sns.boxplot(x="Stress_Level", y="CGPA", data=df)
+    plt.title("CGPA vs Stress Level")
+    plt.tight_layout()
+    plt.savefig(BASE_DIR / "cgpa_vs_stress.png", dpi=150)
+    plt.close()
+
+    df.to_csv(OUTPUT_FILE, index=False)
+    print(f"Processed dataset saved to {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()
