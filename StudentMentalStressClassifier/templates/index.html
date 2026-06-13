@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Survey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card">
+            <h1><i class="fa-solid fa-clipboard-list"></i> Student Mental Stress Survey</h1>
+            <p class="subtitle">Answer these 10 quick questions to check your stress level.</p>
+
+            <form action="/predict" method="POST">
+
+                <label><i class="fa-solid fa-moon"></i> How would you rate your sleep quality?</label>
+                <select name="sleep_quality" required>
+                    <option value="Good">Good</option>
+                    <option value="Average">Average</option>
+                    <option value="Poor">Poor</option>
+                </select>
+
+                <label><i class="fa-solid fa-face-dizzy"></i> On a scale of 0 (none) to 5 (severe), how anxious do you feel?</label>
+                <input type="number" name="anxiety_score" min="0" max="5" value="2" required>
+
+                <label><i class="fa-solid fa-person-running"></i> How physically active are you?</label>
+                <select name="physical_activity" required>
+                    <option value="High">High</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Low">Low</option>
+                </select>
+
+                <label><i class="fa-solid fa-utensils"></i> How would you rate your diet quality?</label>
+                <select name="diet_quality" required>
+                    <option value="Good">Good</option>
+                    <option value="Average">Average</option>
+                    <option value="Poor">Poor</option>
+                </select>
+
+                <label><i class="fa-solid fa-people-group"></i> How much social support do you have?</label>
+                <select name="social_support" required>
+                    <option value="High">High</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Low">Low</option>
+                </select>
+
+                <label><i class="fa-solid fa-coins"></i> On a scale of 0 (none) to 5 (severe), how much financial stress do you feel?</label>
+                <input type="number" name="financial_stress" min="0" max="5" value="2" required>
+
+                <label><i class="fa-solid fa-pills"></i> How often do you use substances (alcohol/tobacco/etc.)?</label>
+                <select name="substance_use" required>
+                    <option value="Never">Never</option>
+                    <option value="Occasionally">Occasionally</option>
+                    <option value="Frequently">Frequently</option>
+                </select>
+
+                <label><i class="fa-solid fa-comments"></i> How often do you use counseling services?</label>
+                <select name="counseling_service_use" required>
+                    <option value="Never">Never</option>
+                    <option value="Occasionally">Occasionally</option>
+                    <option value="Frequently">Frequently</option>
+                </select>
+
+                <label><i class="fa-solid fa-book"></i> Do you feel overwhelmed by academic workload most days?</label>
+                <select name="q9">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+
+                <label><i class="fa-solid fa-clock"></i> Do you feel you have enough time for yourself?</label>
+                <select name="q10">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+
+                <button type="submit"><i class="fa-solid fa-magnifying-glass-chart"></i> Check My Stress Level</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
