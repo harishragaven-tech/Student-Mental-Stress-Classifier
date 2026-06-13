@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 900px;">
+            <h1><i class="fa-solid fa-chart-simple"></i> Survey Dashboard</h1>
+            <p class="subtitle">Live statistics from all survey responses submitted so far.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-users" style="color:#7c9eff;"></i>
+                    <div class="stat-number">{{ total }}</div>
+                    <div class="stat-label">Total Responses</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-face-smile" style="color:#2ecc71;"></i>
+                    <div class="stat-number">{{ counts['Low Stress'] }}</div>
+                    <div class="stat-label">Low Stress</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-face-meh" style="color:#f39c12;"></i>
+                    <div class="stat-number">{{ counts['Moderate Stress'] }}</div>
+                    <div class="stat-label">Moderate Stress</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-face-sad-tear" style="color:#e74c3c;"></i>
+                    <div class="stat-number">{{ counts['High Stress'] }}</div>
+                    <div class="stat-label">High Stress</div>
+                </div>
+            </div>
+
+            <div class="bar-wrap">
+                {% set max_val = [counts['Low Stress'], counts['Moderate Stress'], counts['High Stress'], 1] | max %}
+
+                <div class="bar-row">
+                    <div class="bar-label"><span>Low Stress</span><span>{{ counts['Low Stress'] }}</span></div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bar-low" style="width: {{ (counts['Low Stress'] / max_val * 100) }}%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar-row">
+                    <div class="bar-label"><span>Moderate Stress</span><span>{{ counts['Moderate Stress'] }}</span></div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bar-moderate" style="width: {{ (counts['Moderate Stress'] / max_val * 100) }}%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar-row">
+                    <div class="bar-label"><span>High Stress</span><span>{{ counts['High Stress'] }}</span></div>
+                    <div class="bar-bg">
+                        <div class="bar-fill bar-high" style="width: {{ (counts['High Stress'] / max_val * 100) }}%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/survey" class="btn-primary" style="margin-top: 30px;">
+                <i class="fa-solid fa-plus"></i> Take Survey
+            </a>
+        </div>
+    </div>
+</body>
+</html>
