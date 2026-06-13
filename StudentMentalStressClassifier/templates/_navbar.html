@@ -1,0 +1,10 @@
+<nav class="navbar">
+    <div class="logo"><i class="fa-solid fa-brain"></i> MindCheck</div>
+    <ul class="nav-links">
+        <li><a href="/" class="{{ 'active' if active=='home' else '' }}"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="/survey" class="{{ 'active' if active=='survey' else '' }}"><i class="fa-solid fa-clipboard-list"></i> Survey</a></li>
+        <li><a href="/dashboard" class="{{ 'active' if active=='dashboard' else '' }}"><i class="fa-solid fa-chart-simple"></i> Dashboard</a></li>
+        <li><a href="/history" class="{{ 'active' if active=='history' else '' }}"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+        <li><a href="/about" class="{{ 'active' if active=='about' else '' }}"><i class="fa-solid fa-circle-info"></i> About</a></li>
+    </ul>
+</nav>
