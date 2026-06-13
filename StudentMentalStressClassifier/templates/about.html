@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - About</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 900px;">
+            <h1><i class="fa-solid fa-circle-info"></i> About MindCheck</h1>
+            <p class="subtitle">
+                MindCheck is an AI-powered tool built to help students understand their
+                mental stress levels using a Support Vector Machine (SVM) classifier
+                trained on real student survey data.
+            </p>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <i class="fa-solid fa-database"></i>
+                    <h3>Data-Driven</h3>
+                    <p>Trained on a dataset of student lifestyle, sleep, anxiety, and academic factors.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fa-solid fa-robot"></i>
+                    <h3>SVM Classifier</h3>
+                    <p>Uses a Support Vector Machine to classify stress into Low, Moderate, or High.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                    <h3>Personalized Tips</h3>
+                    <p>Provides coping suggestions tailored to your predicted stress level.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Private & Local</h3>
+                    <p>Your responses are stored locally in SQLite for analysis, not shared externally.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <h3>Built for Students</h3>
+                    <p>Designed as an academic project to raise awareness about student mental health.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h3>Disclaimer</h3>
+                    <p>This tool is for educational purposes only and is not a substitute for professional medical advice.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
