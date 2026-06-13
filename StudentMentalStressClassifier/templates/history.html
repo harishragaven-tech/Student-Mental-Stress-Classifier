@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid #2a2e3a;
+            white-space: nowrap;
+        }
+        th {
+            color: #7c9eff;
+            font-weight: 600;
+        }
+        td {
+            color: #c4c8d4;
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-low { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .badge-moderate { background: rgba(243,156,18,0.15); color: #f39c12; }
+        .badge-high { background: rgba(231,76,60,0.15); color: #e74c3c; }
+    </style>
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 1100px;">
+            <h1><i class="fa-solid fa-clock-rotate-left"></i> Survey History</h1>
+            <p class="subtitle">All survey responses submitted so far, most recent first.</p>
+
+            {% if rows|length == 0 %}
+                <p style="text-align:center; color:#9a9eb5; margin-top:30px;">
+                    No survey responses yet. <a href="/survey" style="color:#7c9eff;">Take the survey</a> to see results here.
+                </p>
+            {% else %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date/Time</th>
+                            <th>Sleep</th>
+                            <th>Anxiety</th>
+                            <th>Activity</th>
+                            <th>Diet</th>
+                            <th>Social Support</th>
+                            <th>Financial Stress</th>
+                            <th>Substance Use</th>
+                            <th>Counseling</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            <td>{{ row[0] }}</td>
+                            <td>{{ row[10] }}</td>
+                            <td>{{ row[1] }}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>
+                            <td>{{ row[6] }}</td>
+                            <td>{{ row[7] }}</td>
+                            <td>{{ row[8] }}</td>
+                            <td>
+                                {% if row[9] == 'Low Stress' %}
+                                    <span class="badge badge-low">{{ row[9] }}</span>
+                                {% elif row[9] == 'Moderate Stress' %}
+                                    <span class="badge badge-moderate">{{ row[9] }}</span>
+                                {% else %}
+                                    <span class="badge badge-high">{{ row[9] }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
