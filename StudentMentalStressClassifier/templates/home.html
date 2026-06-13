@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Know Your Stress.<br>Take Control of Your Mind.</h1>
+                <p>
+                    MindCheck is a quick, AI-powered survey that analyzes your sleep,
+                    anxiety, lifestyle, and academic habits to estimate your stress level —
+                    Low, Moderate, or High — and gives you personalized coping suggestions.
+                </p>
+                <a href="/survey" class="btn-primary"><i class="fa-solid fa-play"></i> Take the Survey</a>
+            </div>
+
+            <div class="hero-icons">
+                <div class="icon-card">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Sleep Quality</span>
+                </div>
+                <div class="icon-card">
+                    <i class="fa-solid fa-face-dizzy"></i>
+                    <span>Anxiety Levels</span>
+                </div>
+                <div class="icon-card">
+                    <i class="fa-solid fa-person-running"></i>
+                    <span>Physical Activity</span>
+                </div>
+                <div class="icon-card">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                    <span>Mental Wellness</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
