@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card">
+            <h1><i class="fa-solid fa-brain"></i> Your Result</h1>
+
+            <div class="result-box result-{{ prediction|replace(' ', '')|lower }}">
+                {% if level == 0 %}
+                    <i class="fa-solid fa-face-smile"></i>
+                {% elif level == 1 %}
+                    <i class="fa-solid fa-face-meh"></i>
+                {% else %}
+                    <i class="fa-solid fa-face-sad-tear"></i>
+                {% endif %}
+                {{ prediction }}
+            </div>
+
+            <h2><i class="fa-solid fa-lightbulb"></i> Coping Suggestions</h2>
+            <ul class="tips">
+                {% for tip in tips %}
+                <li><i class="fa-solid fa-circle-check"></i> {{ tip }}</li>
+                {% endfor %}
+            </ul>
+
+            <a href="/survey" class="btn-back"><i class="fa-solid fa-arrow-rotate-left"></i> Take Survey Again</a>
+        </div>
+    </div>
+</body>
+</html>
