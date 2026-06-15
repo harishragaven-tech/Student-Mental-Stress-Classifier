@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .chart-box {
+            background: #1b1f2b;
+            border: 1px solid #2a2e3a;
+            border-radius: 16px;
+            padding: 25px;
+        }
+        .chart-box h3 {
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #c4c8d4;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-box h3 i { color: #7c9eff; }
+        canvas { max-height: 280px; }
+    </style>
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 1100px;">
+            <h1><i class="fa-solid fa-chart-pie"></i> Dataset Analytics</h1>
+            <p class="subtitle">Insights from the student mental health survey dataset used to train the model.</p>
+
+            <div class="chart-grid">
+                <div class="chart-box">
+                    <h3><i class="fa-solid fa-moon"></i> Avg Anxiety Score by Sleep Quality</h3>
+                    <canvas id="sleepAnxietyChart"></canvas>
+                </div>
+
+                <div class="chart-box">
+                    <h3><i class="fa-solid fa-graduation-cap"></i> Avg CGPA by Sleep Quality</h3>
+                    <canvas id="sleepCgpaChart"></canvas>
+                </div>
+
+                <div class="chart-box">
+                    <h3><i class="fa-solid fa-pills"></i> Substance Use Distribution</h3>
+                    <canvas id="substanceChart"></canvas>
+                </div>
+
+                <div class="chart-box">
+                    <h3><i class="fa-solid fa-person-running"></i> Avg Anxiety Score by Physical Activity</h3>
+                    <canvas id="activityAnxietyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const darkOptions = {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: '#c4c8d4' } }
+            },
+            scales: {
+                x: { ticks: { color: '#9a9eb5' }, grid: { color: '#2a2e3a' } },
+                y: { ticks: { color: '#9a9eb5' }, grid: { color: '#2a2e3a' } }
+            }
+        };
+
+        new Chart(document.getElementById('sleepAnxietyChart'), {
+            type: 'bar',
+            data: {
+                labels: {{ sleep_labels | tojson }},
+                datasets: [{
+                    label: 'Avg Anxiety Score',
+                    data: {{ sleep_anxiety | tojson }},
+                    backgroundColor: '#7c9eff'
+                }]
+            },
+            options: darkOptions
+        });
+
+        new Chart(document.getElementById('sleepCgpaChart'), {
+            type: 'bar',
+            data: {
+                labels: {{ sleep_labels | tojson }},
+                datasets: [{
+                    label: 'Avg CGPA',
+                    data: {{ sleep_cgpa | tojson }},
+                    backgroundColor: '#a78bfa'
+                }]
+            },
+            options: darkOptions
+        });
+
+        new Chart(document.getElementById('substanceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: {{ substance_labels | tojson }},
+                datasets: [{
+                    data: {{ substance_values | tojson }},
+                    backgroundColor: ['#2ecc71', '#f39c12', '#e74c3c']
+                }]
+            },
+            options: { plugins: { legend: { labels: { color: '#c4c8d4' } } } }
+        });
+
+        new Chart(document.getElementById('activityAnxietyChart'), {
+            type: 'bar',
+            data: {
+                labels: {{ activity_labels | tojson }},
+                datasets: [{
+                    label: 'Avg Anxiety Score',
+                    data: {{ activity_anxiety | tojson }},
+                    backgroundColor: '#2ecc71'
+                }]
+            },
+            options: darkOptions
+        });
+    </script>
+</body>
+</html>
