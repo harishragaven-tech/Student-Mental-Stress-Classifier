@@ -38,6 +38,29 @@
         .badge-low { background: rgba(46,204,113,0.15); color: #2ecc71; }
         .badge-moderate { background: rgba(243,156,18,0.15); color: #f39c12; }
         .badge-high { background: rgba(231,76,60,0.15); color: #e74c3c; }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-bar input,
+        .filter-bar select {
+            padding: 10px 14px;
+            border: 1px solid #2a2e3a;
+            border-radius: 8px;
+            background: #11141d;
+            color: #e6e6f0;
+            font-size: 13px;
+        }
+        .filter-bar input {
+            flex: 1;
+            min-width: 180px;
+        }
+        tr.hidden-row {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -53,11 +76,22 @@
                     No survey responses yet. <a href="/survey" style="color:#7c9eff;">Take the survey</a> to see results here.
                 </p>
             {% else %}
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="Search by name, email, or date...">
+                <select id="stressFilter">
+                    <option value="all">All Stress Levels</option>
+                    <option value="Low Stress">Low Stress</option>
+                    <option value="Moderate Stress">Moderate Stress</option>
+                    <option value="High Stress">High Stress</option>
+                </select>
+            </div>
             <div class="table-wrap">
-                <table>
+                <table id="historyTable">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
                             <th>Date/Time</th>
                             <th>Sleep</th>
                             <th>Anxiety</th>
@@ -72,24 +106,27 @@
                     </thead>
                     <tbody>
                         {% for row in rows %}
-                        <tr>
+                        <tr data-date="{{ row[12]|lower }}" data-stress="{{ row[11] }}"
+                            data-name="{{ row[1]|lower }}" data-email="{{ row[2]|lower }}">
                             <td>{{ row[0] }}</td>
-                            <td>{{ row[10] }}</td>
                             <td>{{ row[1] }}</td>
                             <td>{{ row[2] }}</td>
+                            <td>{{ row[12] }}</td>
                             <td>{{ row[3] }}</td>
                             <td>{{ row[4] }}</td>
                             <td>{{ row[5] }}</td>
                             <td>{{ row[6] }}</td>
                             <td>{{ row[7] }}</td>
                             <td>{{ row[8] }}</td>
+                            <td>{{ row[9] }}</td>
+                            <td>{{ row[10] }}</td>
                             <td>
-                                {% if row[9] == 'Low Stress' %}
-                                    <span class="badge badge-low">{{ row[9] }}</span>
-                                {% elif row[9] == 'Moderate Stress' %}
-                                    <span class="badge badge-moderate">{{ row[9] }}</span>
+                                {% if row[11] == 'Low Stress' %}
+                                    <span class="badge badge-low">{{ row[11] }}</span>
+                                {% elif row[11] == 'Moderate Stress' %}
+                                    <span class="badge badge-moderate">{{ row[11] }}</span>
                                 {% else %}
-                                    <span class="badge badge-high">{{ row[9] }}</span>
+                                    <span class="badge badge-high">{{ row[11] }}</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -100,5 +137,37 @@
             {% endif %}
         </div>
     </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const stressFilter = document.getElementById('stressFilter');
+        const rows = document.querySelectorAll('#historyTable tbody tr');
+
+        function applyFilters() {
+            const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
+            const stressVal = stressFilter ? stressFilter.value : 'all';
+
+            rows.forEach(row => {
+                const date = row.getAttribute('data-date');
+                const name = row.getAttribute('data-name');
+                const email = row.getAttribute('data-email');
+                const stress = row.getAttribute('data-stress');
+
+                const matchesSearch = date.includes(searchVal) ||
+                                       name.includes(searchVal) ||
+                                       email.includes(searchVal);
+                const matchesStress = (stressVal === 'all') || (stress === stressVal);
+
+                if (matchesSearch && matchesStress) {
+                    row.classList.remove('hidden-row');
+                } else {
+                    row.classList.add('hidden-row');
+                }
+            });
+        }
+
+        if (searchInput) searchInput.addEventListener('input', applyFilters);
+        if (stressFilter) stressFilter.addEventListener('change', applyFilters);
+    </script>
 </body>
 </html>
