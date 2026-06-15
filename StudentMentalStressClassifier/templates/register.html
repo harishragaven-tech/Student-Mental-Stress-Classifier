@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 420px;">
+            <h1><i class="fa-solid fa-user-plus"></i> Create Account</h1>
+            <p class="subtitle">Sign up to access MindCheck's survey and history.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="result-box {{ 'result-lowstress' if category=='success' else 'result-highstress' }}" style="font-size:14px; padding:14px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/register" method="POST">
+                <label><i class="fa-solid fa-user"></i> Username</label>
+                <input type="text" name="username" required placeholder="Choose a username">
+
+                <label><i class="fa-solid fa-envelope"></i> Email</label>
+                <input type="email" name="email" required placeholder="Enter your email">
+
+                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <input type="password" name="password" required placeholder="Choose a password">
+
+                <button type="submit"><i class="fa-solid fa-user-plus"></i> Register</button>
+            </form>
+
+            <p style="text-align:center; margin-top:20px; color:#9a9eb5; font-size:14px;">
+                Already have an account? <a href="/login" style="color:#7c9eff;">Login here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
