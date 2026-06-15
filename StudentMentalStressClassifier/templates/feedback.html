@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Feedback</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card">
+            <h1><i class="fa-solid fa-comment-dots"></i> Feedback</h1>
+            <p class="subtitle">We would love to hear your thoughts about MindCheck.</p>
+
+            {% if submitted %}
+                <div class="result-box result-lowstress">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Thank you! Your feedback has been submitted.
+                </div>
+                <a href="/" class="btn-back"><i class="fa-solid fa-house"></i> Back to Home</a>
+            {% else %}
+                <form action="/feedback" method="POST">
+                    <label><i class="fa-solid fa-user"></i> Your Name</label>
+                    <input type="text" name="name" required placeholder="Enter your name"
+                           style="padding:12px 14px; border:1px solid #2a2e3a; border-radius:8px; background:#11141d; color:#e6e6f0; width:100%;">
+
+                    <label><i class="fa-solid fa-message"></i> Your Message / Feedback</label>
+                    <textarea name="message" rows="5" required placeholder="Write your feedback here..."
+                              style="padding:12px 14px; border:1px solid #2a2e3a; border-radius:8px; background:#11141d; color:#e6e6f0; width:100%; margin-top:6px; font-family:inherit;"></textarea>
+
+                    <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Feedback</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
