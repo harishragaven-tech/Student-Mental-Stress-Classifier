@@ -1,6 +1,7 @@
 import os
 import pickle
 import sqlite3
+import pandas as pd
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
@@ -68,6 +69,8 @@ def init_db():
     c.execute("""
         CREATE TABLE IF NOT EXISTS responses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT,
             sleep_quality TEXT,
             anxiety_score INTEGER,
             physical_activity TEXT,
@@ -80,6 +83,14 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    c.execute("PRAGMA table_info(responses)")
+    existing_cols = [row[1] for row in c.fetchall()]
+    if "name" not in existing_cols:
+        c.execute("ALTER TABLE responses ADD COLUMN name TEXT")
+    if "email" not in existing_cols:
+        c.execute("ALTER TABLE responses ADD COLUMN email TEXT")
+
     conn.commit()
     conn.close()
 
@@ -120,7 +131,7 @@ def history():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        SELECT id, sleep_quality, anxiety_score, physical_activity, diet_quality,
+        SELECT id, name, email, sleep_quality, anxiety_score, physical_activity, diet_quality,
                social_support, financial_stress, substance_use, counseling_service_use,
                prediction, created_at
         FROM responses ORDER BY id DESC
@@ -129,20 +140,77 @@ def history():
     conn.close()
     return render_template("history.html", rows=rows)
 
+@app.route("/analytics")
+def analytics():
+    df = pd.read_csv(os.path.join(BASE_DIR, "students_mental_health_survey_cleaned.csv"))
+
+    sleep_anxiety = df.groupby("Sleep_Quality")["Anxiety_Score"].mean().round(2)
+    sleep_cgpa = df.groupby("Sleep_Quality")["CGPA"].mean().round(2)
+    substance_counts = df["Substance_Use"].value_counts()
+    activity_anxiety = df.groupby("Physical_Activity")["Anxiety_Score"].mean().round(2)
+
+    return render_template(
+        "analytics.html",
+        sleep_labels=list(sleep_anxiety.index),
+        sleep_anxiety=[float(v) for v in sleep_anxiety.values],
+        sleep_cgpa=[float(v) for v in sleep_cgpa.values],
+        substance_labels=list(substance_counts.index),
+        substance_values=[int(v) for v in substance_counts.values],
+        activity_labels=list(activity_anxiety.index),
+        activity_anxiety=[float(v) for v in activity_anxiety.values],
+    )
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+@app.route("/feedback", methods=["GET", "POST"])
+def feedback():
+    if request.method == "POST":
+        name = request.form.get("name")
+        message = request.form.get("message")
+
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS feedback (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                message TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        c.execute("INSERT INTO feedback (name, message) VALUES (?, ?)", (name, message))
+        conn.commit()
+        conn.close()
+
+        return render_template("feedback.html", submitted=True)
+
+    return render_template("feedback.html", submitted=False)
+
+@app.route("/model-info")
+def model_info():
+    return render_template("model_info.html", columns=COLUMNS)
+
 @app.route("/predict", methods=["POST"])
 def predict():
     form = request.form
 
+    user_name = form.get("user_name", "")
+    user_email = form.get("user_email", "")
+
     # ---- Build full feature dict ----
-    data = dict(DEFAULTS)  # start with defaults
-    data["Sleep_Quality"] = form.get("sleep_quality")
-    data["Anxiety_Score"] = float(form.get("anxiety_score", 0))
-    data["Physical_Activity"] = form.get("physical_activity")
-    data["Diet_Quality"] = form.get("diet_quality")
-    data["Social_Support"] = form.get("social_support")
-    data["Financial_Stress"] = float(form.get("financial_stress", 0))
-    data["Substance_Use"] = form.get("substance_use")
-    data["Counseling_Service_Use"] = form.get("counseling_service_use")
+    # ---- Build feature dict from the 8 survey-driven features ----
+    data = {
+        "Sleep_Quality": form.get("sleep_quality"),
+        "Anxiety_Score": float(form.get("anxiety_score", 0)),
+        "Physical_Activity": form.get("physical_activity"),
+        "Diet_Quality": form.get("diet_quality"),
+        "Social_Support": form.get("social_support"),
+        "Financial_Stress": float(form.get("financial_stress", 0)),
+        "Substance_Use": form.get("substance_use"),
+        "Counseling_Service_Use": form.get("counseling_service_use"),
+    }
 
     # ---- Encode categorical values using saved LabelEncoders ----
     row = []
@@ -158,7 +226,12 @@ def predict():
 
     # ---- Scale & predict ----
     X_scaled = scaler.transform([row])
-    pred = int(model.predict(X_scaled)[0])
+    if data["Anxiety_Score"] >= 4 or data["Financial_Stress"] >= 4:
+        pred = 2
+    elif data["Anxiety_Score"] >= 2 or data["Financial_Stress"] >= 2:
+        pred = 1
+    else:
+        pred = 0
 
     label = LEVEL_LABELS.get(pred, "Unknown")
     tips = COPING_TIPS.get(pred, [])
@@ -168,10 +241,11 @@ def predict():
     c = conn.cursor()
     c.execute("""
         INSERT INTO responses
-        (sleep_quality, anxiety_score, physical_activity, diet_quality,
+        (name, email, sleep_quality, anxiety_score, physical_activity, diet_quality,
          social_support, financial_stress, substance_use, counseling_service_use, prediction)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
+        user_name, user_email,
         data["Sleep_Quality"], data["Anxiety_Score"], data["Physical_Activity"],
         data["Diet_Quality"], data["Social_Support"], data["Financial_Stress"],
         data["Substance_Use"], data["Counseling_Service_Use"], label
@@ -182,4 +256,5 @@ def predict():
     return render_template("result.html", prediction=label, tips=tips, level=pred)
 
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True)
