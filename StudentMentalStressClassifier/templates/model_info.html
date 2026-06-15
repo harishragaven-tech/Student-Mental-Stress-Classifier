@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCheck - Model Info</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 900px;">
+            <h1><i class="fa-solid fa-robot"></i> Model Information</h1>
+            <p class="subtitle">Details about the machine learning model powering MindCheck.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-gears" style="color:#7c9eff;"></i>
+                    <div class="stat-number" style="font-size:18px;">SVM (RBF Kernel)</div>
+                    <div class="stat-label">Algorithm</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-layer-group" style="color:#a78bfa;"></i>
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Stress Classes</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-percent" style="color:#2ecc71;"></i>
+                    <div class="stat-number">~37%</div>
+                    <div class="stat-label">Test Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-database" style="color:#f39c12;"></i>
+                    <div class="stat-number">6,000+</div>
+                    <div class="stat-label">Training Records</div>
+                </div>
+            </div>
+
+            <h2 style="margin-top:35px;"><i class="fa-solid fa-list"></i> Features Used by the Model</h2>
+            <ul class="tips">
+                {% for col in columns %}
+                <li><i class="fa-solid fa-circle-check"></i> {{ col }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2><i class="fa-solid fa-circle-info"></i> Output Classes</h2>
+            <ul class="tips">
+                <li><i class="fa-solid fa-circle-check" style="color:#2ecc71;"></i> 0 = Low Stress</li>
+                <li><i class="fa-solid fa-circle-check" style="color:#f39c12;"></i> 1 = Moderate Stress</li>
+                <li><i class="fa-solid fa-circle-check" style="color:#e74c3c;"></i> 2 = High Stress</li>
+            </ul>
+
+            <h2><i class="fa-solid fa-flask"></i> Preprocessing Pipeline</h2>
+            <ul class="tips">
+                <li><i class="fa-solid fa-circle-check"></i> Label Encoding for categorical features</li>
+                <li><i class="fa-solid fa-circle-check"></i> StandardScaler for feature scaling</li>
+                <li><i class="fa-solid fa-circle-check"></i> 80/20 train-test split with stratification</li>
+                <li><i class="fa-solid fa-circle-check"></i> class_weight='balanced' to handle class imbalance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
