@@ -17,61 +17,67 @@
 
             <form action="/predict" method="POST">
 
-                <label><i class="fa-solid fa-moon"></i> How would you rate your sleep quality?</label>
+                <label><i class="fa-solid fa-user"></i> Your Name</label>
+                <input type="text" name="user_name" required placeholder="Enter your full name">
+
+                <label><i class="fa-solid fa-envelope"></i> Your Email</label>
+                <input type="email" name="user_email" required placeholder="Enter your email address">
+
+                <label><i class="fa-solid fa-moon"></i> 1. How would you rate your sleep quality?</label>
                 <select name="sleep_quality" required>
                     <option value="Good">Good</option>
                     <option value="Average">Average</option>
                     <option value="Poor">Poor</option>
                 </select>
 
-                <label><i class="fa-solid fa-face-dizzy"></i> On a scale of 0 (none) to 5 (severe), how anxious do you feel?</label>
+                <label><i class="fa-solid fa-face-dizzy"></i> 2. On a scale of 0 (none) to 5 (severe), how anxious do you feel?</label>
                 <input type="number" name="anxiety_score" min="0" max="5" value="2" required>
 
-                <label><i class="fa-solid fa-person-running"></i> How physically active are you?</label>
+                <label><i class="fa-solid fa-person-running"></i> 3. How physically active are you?</label>
                 <select name="physical_activity" required>
                     <option value="High">High</option>
                     <option value="Moderate">Moderate</option>
                     <option value="Low">Low</option>
                 </select>
 
-                <label><i class="fa-solid fa-utensils"></i> How would you rate your diet quality?</label>
+                <label><i class="fa-solid fa-utensils"></i> 4. How would you rate your diet quality?</label>
                 <select name="diet_quality" required>
                     <option value="Good">Good</option>
                     <option value="Average">Average</option>
                     <option value="Poor">Poor</option>
                 </select>
 
-                <label><i class="fa-solid fa-people-group"></i> How much social support do you have?</label>
+                <label><i class="fa-solid fa-people-group"></i> 5. How much social support do you have?</label>
                 <select name="social_support" required>
                     <option value="High">High</option>
                     <option value="Moderate">Moderate</option>
                     <option value="Low">Low</option>
                 </select>
 
-                <label><i class="fa-solid fa-coins"></i> On a scale of 0 (none) to 5 (severe), how much financial stress do you feel?</label>
+                <label><i class="fa-solid fa-coins"></i> 6. On a scale of 0 (none) to 5 (severe), how much financial stress do you feel?</label>
                 <input type="number" name="financial_stress" min="0" max="5" value="2" required>
 
-                <label><i class="fa-solid fa-pills"></i> How often do you use substances (alcohol/tobacco/etc.)?</label>
+                <label><i class="fa-solid fa-pills"></i> 7. How often do you use substances (alcohol/tobacco/etc.)?</label>
                 <select name="substance_use" required>
                     <option value="Never">Never</option>
                     <option value="Occasionally">Occasionally</option>
                     <option value="Frequently">Frequently</option>
                 </select>
 
-                <label><i class="fa-solid fa-comments"></i> How often do you use counseling services?</label>
+                <label><i class="fa-solid fa-comments"></i> 8. How often do you use counseling services?</label>
                 <select name="counseling_service_use" required>
                     <option value="Never">Never</option>
                     <option value="Occasionally">Occasionally</option>
                     <option value="Frequently">Frequently</option>
                 </select>
 
-                <label><i class="fa-solid fa-book"></i> Do you feel overwhelmed by academic workload most days?</label>
+                <label><i class="fa-solid fa-book"></i> 9. Do you feel overwhelmed by academic workload most days?</label>
                 <select name="q9">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
 
-                <label><i class="fa-solid fa-clock"></i> Do you feel you have enough time for yourself?</label>
+                <label><i class="fa-solid fa-clock"></i> 10. Do you feel you have enough time for yourself?</label>
                 <select name="q10">
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
