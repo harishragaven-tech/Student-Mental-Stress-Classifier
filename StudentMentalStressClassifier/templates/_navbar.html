@@ -1,5 +1,10 @@
  <nav class="navbar">
-    <div class="logo"><i class="fa-solid fa-brain"></i> MindCheck</div>
+    <div class="logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" 
+         alt="MindCheck Logo" 
+         style="width:38px; height:38px; border-radius:8px; object-fit:cover;">
+    MindCheck
+</div>
     <ul class="nav-links">
         <li><a href="/" class="{{ 'active' if active=='home' else '' }}"><i class="fa-solid fa-house"></i> Home</a></li>
         <li><a href="/survey" class="{{ 'active' if active=='survey' else '' }}"><i class="fa-solid fa-clipboard-list"></i> Survey</a></li>
